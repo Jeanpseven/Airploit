@@ -1,7 +1,32 @@
+
 # Airploit
+                                                  .:-======-:.                                                                    
+                                             .=*##+=-:....:-=+*#*-                                                                
+                                           .*%=.                .=%*.                                                             
+                                          :@+         =+++:        =@:                                                            
+                                          =%         @@@@@@-        #=                                                            
+                                           #-        =@@@@@+       :*               .:------:.                                    
+                                            :=:        -@@@@=    :-:           :====-::..::-=+#%#+:                               
+                                               .......  +@@@@%:              --.                .=%@+.                            
+                                                         @@@@@@#:           :          .-=:        =@@.                           
+                                                         #@@@@@@@%+=-------=======++*#@@@@@@        %@=                           
+                                                        :%@- *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+       -@%.                           
+                                -+++++=======-     .-+#@@@+ +@@@@@**%@@@@@@@@@@@#+-:.            -##-                             
+                             =#*-             .-+#@@@@@@@@= @@@@@#: :@@@@@@@@*:    ...    .:--==+-                                
+                           .%#       :====+*%@@@@@@@@@@@@@=.@@@@@@@@@@%+=#@@@*         ....                                       
+                           :@:      +@@@@@@@@@@@@@@@@@@@@@=.@@@@@@@@%=     +@@.                                                   
+                            =#:     :*%@#+:::..   :@@==@@@=.@@@@@@@#@#      =@+                                                   
+                              -=-:           .::. @%   *@@--@@@@@@@@@@:.:::: %%                                                   
+                                 .::::.......    -@-    -==@@@#- .#@@@@.    .=@:           **Airploit - Controle Absoluto dos Céus**                                     
+                                                 -@:    :+. .      %@@@@+    :@=                                                  
+                                                 -@:  :+:    =     =@+@%=    -@=                                                  
+                                                 -%.-+:       :--.  @*   . .+@*                                                   
+                                                  :+:            .:.#@====#@+.                                                    
+                                                                    =@.-%@=                                                       
+                                                                    :@@#-                                                         
+                                                                     :.                                       
 script que hackeia drones usando biblioteca Tello
 
-Airploit - Controle Absoluto dos Céus
 
 Domine os céus e assuma o controle total do seu drone com o poderoso script Airploit. Desenvolvido para entusiastas de drones que desejam explorar todo o potencial de suas aeronaves, o Airploit oferece uma interface avançada e intuitiva para controlar e comandar seu drone com facilidade e precisão.
 
