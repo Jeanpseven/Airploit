@@ -45,17 +45,29 @@ Feedback de Estado do Drone: Receba informações em tempo real sobre o estado d
 Lista de Comandos Disponíveis:
 
 takeoff: Decolar o drone.
+
 land: Pousar o drone.
+
 up {distância}: Mover o drone para cima a uma distância específica.
+
 down {distância}: Mover o drone para baixo a uma distância específica.
+
 left {distância}: Mover o drone para a esquerda a uma distância específica.
+
 right {distância}: Mover o drone para a direita a uma distância específica.
+
 forward {distância}: Mover o drone para frente a uma distância específica.
+
 back {distância}: Mover o drone para trás a uma distância específica.
+
 flip {direção}: Realizar um flip na direção especificada.
+
 cw {ângulo}: Girar o drone no sentido horário por um ângulo específico.
+
 ccw {ângulo}: Girar o drone no sentido anti-horário por um ângulo específico.
+
 battery?: Obter o nível atual da bateria do drone.
+
 Exemplos de Comandos:
 
 Digite "takeoff" para decolar o drone.
