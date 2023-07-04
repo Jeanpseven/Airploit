@@ -39,7 +39,7 @@ Experimente "flip front" para realizar um flip para a frente.
 Envie o comando "ccw 90" para girar o drone 90 graus no sentido anti-horário.
 Digite "battery?" para verificar o nível atual da bateria do drone.
 
-![camera](img)
+![camera](img.jpg)
 
 Os comandos "record" e "capture" são usados para gravar vídeos e capturar fotos, respectivamente, utilizando o drone Tello.
 
