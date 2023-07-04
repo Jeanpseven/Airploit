@@ -12,7 +12,7 @@ def ascii():
                                            .*%=.                .=%*.                                                             
                                           :@+         =+++:        =@:                                                            
                                           =%         @@@@@@-        #=                                                            
-                                           #-        =@@@@@+       :*               .:------:.                                    
+                                           #-        =@@@@=       :*               .:------:.                                    
                                             :=:        -@@@@=    :-:           :====-::..::-=+#%#+:                               
                                                .......  +@@@@%:              --.                .=%@+.                            
                                                          @@@@@@#:           :          .-=:        =@@.                           
@@ -32,6 +32,10 @@ def ascii():
                                                                     =@.-%@=                                                       
                                                                     :@@#-                                                         
                                                                      :.                                       """)
+
+
+ascii()
+
 # Verifica se a biblioteca djitellopy está instalada
 try:
     importlib.import_module('djitellopy')
@@ -151,7 +155,9 @@ command_list = [
     "flip {direction}",
     "cw {angle}",
     "ccw {angle}",
-    "battery?"
+    "battery?",
+    "capture",
+    "record {time}"
 ]
 
 # Imprimir a lista de comandos disponíveis
@@ -166,34 +172,28 @@ def process_user_commands():
         if user_input.lower() == "sair":
             break
         try:
-            command_index = int(user_input)
-            if 1 <= command_index <= len(command_list):
-                selected_command = command_list[command_index - 1]
-                if "{distance}" in selected_command:
-                    distance = input("Digite a distância desejada: ")
-                    selected_command = selected_command.replace("{distance}", distance)
-                if "{direction}" in selected_command:
-                    direction = input("Digite a direção desejada (left/right): ")
-                    selected_command = selected_command.replace("{direction}", direction)
-                if "{angle}" in selected_command:
-                    angle = input("Digite o ângulo desejado: ")
-                    selected_command = selected_command.replace("{angle}", angle)
-                send_command(selected_command)
+            command_index = int(user_input) - 1
+            if 0 <= command_index < len(command_list):
+                command = command_list[command_index]
+                if "{distance}" in command or "{angle}" in command:
+                    value = input("Digite a distância ou ângulo: ")
+                    command = command.replace("{distance}", value).replace("{angle}", value)
+                send_command(command)
             else:
-                print("Escolha inválida. Tente novamente.")
+                print("Comando inválido. Tente novamente.")
         except ValueError:
-            print("Entrada inválida. Digite um número.")
+            print("Entrada inválida. Digite um número ou 'sair' para encerrar.")
 
-# Thread para processar os comandos do usuário
-command_thread = Thread(target=process_user_commands)
-command_thread.start()
+# Iniciar o processamento de comandos do usuário em uma thread separada
+thread = Thread(target=process_user_commands)
+thread.start()
 
-# Loop principal para receber os dados de estado e vídeo do drone
-while True:
-    sleep(0.1)  # Pequena pausa para liberar o processador
-    if not command_thread.is_alive():
-        break
+# Aguardar o encerramento da thread de processamento de comandos
+thread.join()
 
-# Desconectar o drone e encerrar o programa
+# Parar o stream de vídeo
 drone.streamoff()
+
+# Desconectar do drone
 drone.disconnect()
+
