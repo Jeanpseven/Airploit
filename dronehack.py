@@ -8,6 +8,8 @@ import netifaces
 import socket
 import os
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
 def ascii():
     print("""                                      .:-======-:.                                                                    
                                              .=*##+=-:....:-=+*#*-                                                                
@@ -209,14 +211,28 @@ def take_photo():
 
     photo_counter += 1  # Incrementar o contador para a próxima imagem
 
-# Função para fazer uma gravação e salvar em arquivo local
-def start_recording():
-    drone.start_recording()
-    print("Iniciando gravação")
+recording = False  # Variável para controlar o estado da gravação
+video_counter = 1  # Contador para nomear os vídeos gravados
 
+# Função para iniciar a gravação de vídeo
+def start_recording():
+    global recording, video_counter  # Acessar as variáveis globais
+
+    if not recording:
+        video_path = f"video{video_counter}.mp4"  # Nome do arquivo único
+        drone.start_video_recording(video_path)
+        print(f"Iniciando gravação em '{video_path}'")
+        recording = True
+
+# Função para parar a gravação de vídeo
 def stop_recording():
-    drone.stop_recording()
-    print("Gravação encerrada")
+    global recording, video_counter  # Acessar as variáveis globais
+
+    if recording:
+        drone.stop_video_recording()
+        print("Gravação encerrada")
+        recording = False
+        video_counter += 1  # Incrementar o contador para o próximo vídeo
 
 # Desconectar o drone
 def disconnect_drone(drone):
@@ -374,20 +390,25 @@ def video_handler(event, sender, data):
 def send_command(command):
     drone.send_command(command)
 
-# Função para tirar uma foto e salvá-la em arquivo local
 def take_photo():
+    global photo_counter, script_dir  # Acessar as variáveis globais
+
     photo = drone.take_picture()
-    photo.save("photo.jpg")
-    print("Foto tirada e salva em 'photo.jpg'")
+    photo_path = os.path.join(script_dir, f"photo{photo_counter}.jpg")  # Caminho do arquivo único
+    photo.save(photo_path)
+    print(f"Foto tirada e salva em '{photo_path}'")
 
-# Função para fazer uma gravação e salvar em arquivo local
+    photo_counter += 1  # Incrementar o contador para a próxima imagem
+
+# Função para iniciar a gravação de vídeo
 def start_recording():
-    drone.start_recording()
-    print("Iniciando gravação")
+    global recording, video_counter, script_dir  # Acessar as variáveis globais
 
-def stop_recording():
-    drone.stop_recording()
-    print("Gravação encerrada")
+    if not recording:
+        video_path = os.path.join(script_dir, f"video{video_counter}.mp4")  # Caminho do arquivo único
+        drone.start_video_recording(video_path)
+        print(f"Iniciando gravação em '{video_path}'")
+        recording = True
 
 # Desconectar o drone
 def disconnect_drone(drone):
