@@ -197,10 +197,17 @@ def send_command(command):
     drone.send_command(command)
 
 # Função para tirar uma foto e salvá-la em arquivo local
+photo_counter = 1  # Contador para nomear as imagens capturadas
+
 def take_photo():
+    global photo_counter  # Acessar a variável global do contador
+
     photo = drone.take_picture()
-    photo.save("photo.jpg")
-    print("Foto tirada e salva em 'photo.jpg'")
+    photo_path = f"photo{photo_counter}.jpg"  # Nome do arquivo único
+    photo.save(photo_path)
+    print(f"Foto tirada e salva em '{photo_path}'")
+
+    photo_counter += 1  # Incrementar o contador para a próxima imagem
 
 # Função para fazer uma gravação e salvar em arquivo local
 def start_recording():
