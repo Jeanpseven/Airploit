@@ -94,7 +94,8 @@ No script atualizado, você pode selecionar esses comandos digitando o número c
 
 Certifique-se de que o drone Tello esteja conectado e pronto para receber os comandos antes de executar os comandos de gravação de vídeo ou captura de foto.
 
-#Script de Controle de Drone
+# Script de Controle de Drone
+
 Este é um script Python que utiliza a biblioteca djitellopy para controlar um drone DJI Tello. Ele oferece as seguintes funcionalidades:
 
 Decolar o drone
