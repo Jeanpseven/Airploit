@@ -93,3 +93,35 @@ Exemplo: Digite capture para capturar uma foto com o drone.
 No script atualizado, você pode selecionar esses comandos digitando o número correspondente na lista de comandos disponíveis. Por exemplo, se "record" estiver na posição 13 e "capture" na posição 14, você pode digitar 13 para gravar um vídeo ou 14 para capturar uma foto.
 
 Certifique-se de que o drone Tello esteja conectado e pronto para receber os comandos antes de executar os comandos de gravação de vídeo ou captura de foto.
+
+#Script de Controle de Drone
+Este é um script Python que utiliza a biblioteca djitellopy para controlar um drone DJI Tello. Ele oferece as seguintes funcionalidades:
+
+Decolar o drone
+Pousar o drone
+Mover o drone para frente
+Mover o drone para trás
+Mover o drone para a esquerda
+Mover o drone para a direita
+Capturar o feed de vídeo do drone
+Exibir o feed de vídeo em uma janela usando tkinter
+Controlar o drone usando botões interativos na interface
+Iniciar a captura de vídeo em uma thread separada
+Receber e exibir os dados do estado do drone (bateria, altitude, velocidade, etc.)
+Receber e exibir os dados de vídeo do drone
+Requisitos
+Python 3.7 ou superior
+Biblioteca djitellopy
+Biblioteca tkinter
+Biblioteca PIL (Pillow)
+Biblioteca threading
+Biblioteca time
+Configuração
+Certifique-se de ter todas as bibliotecas necessárias instaladas.
+Conecte o drone DJI Tello à rede Wi-Fi correta.
+Execute o script drone_control.py.
+Utilização
+Execute o script e aguarde até que a interface do drone seja exibida.
+Clique nos botões para controlar o drone: decolar, pousar, mover para frente, mover para trás, mover para a esquerda, mover para a direita.
+O feed de vídeo do drone será exibido na janela.
+O estado atual do drone, como a bateria, altitude e velocidade, será exibido na interface.
