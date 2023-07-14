@@ -2,12 +2,11 @@ import tkinter as tk
 from PIL import ImageTk, Image
 from threading import Thread
 from time import sleep
-from djitellopy import Tello
+import subprocess
 import importlib
 import netifaces
 import socket
 import os
-import random
 
 def ascii():
     print("""                                      .:-======-:.                                                                    
@@ -36,11 +35,68 @@ def ascii():
                                                                     :@@#-                                                         
                                                                      :.                                       """)
 
+# Instalar as bibliotecas necessárias
+libraries = ["Pillow", "djitellopy", "netifaces", "xvfbwrapper"]
 
-# (Controle do Drone)
+for library in libraries:
+    try:
+        importlib.import_module(library)
+        print(f"A biblioteca {library} já está instalada.")
+    except ImportError:
+        print(f"A biblioteca {library} não foi encontrada. Instalando...")
+        try:
+            subprocess.check_call(["pip", "install", library])
+            print(f"A biblioteca {library} foi instalada com sucesso.")
+        except Exception as e:
+            print(f"Ocorreu um erro durante a instalação da biblioteca {library}:")
+            print(str(e))
+            exit()
 
-# Inicializar o drone
-drone = Tello()
+# Função para fechar a janela
+def close_window():
+    window.destroy()
+
+# Função para exibir a janela gráfica
+def display_window():
+    # Criar janela
+    window = tk.Tk()
+    window.title("Controle do Drone")
+    window.geometry("800x600")
+
+    # Criar rótulo para exibir a imagem do vídeo
+    label = tk.Label(window)
+    label.pack()
+
+    # Criar botões de controle
+    takeoff_button = tk.Button(window, text="Decolar", command=takeoff)
+    takeoff_button.pack()
+
+    land_button = tk.Button(window, text="Pousar", command=land)
+    land_button.pack()
+
+    forward_button = tk.Button(window, text="Avançar", command=move_forward)
+    forward_button.pack()
+
+    backward_button = tk.Button(window, text="Recuar", command=move_backward)
+    backward_button.pack()
+
+    left_button = tk.Button(window, text="Esquerda", command=move_left)
+    left_button.pack()
+
+    right_button = tk.Button(window, text="Direita", command=move_right)
+    right_button.pack()
+
+    # Iniciar captura de vídeo em uma thread separada
+    video_thread = Thread(target=capture_video)
+    video_thread.daemon = True
+    video_thread.start()
+
+    # Criar botão de fechar
+    button = tk.Button(window, text="Fechar", command=close_window)
+    button.pack()
+
+    # Executar o loop principal da janela
+    window.mainloop()
 
 # Função para capturar o feed de vídeo do drone
 def capture_video():
@@ -70,37 +126,6 @@ def move_left():
 
 def move_right():
     drone.move_right(50)
-
-# Criar janela
-window = tk.Tk()
-
-# Criar rótulo para exibir a imagem do vídeo
-label = tk.Label(window)
-label.pack()
-
-# Criar botões de controle
-takeoff_button = tk.Button(window, text="Decolar", command=takeoff)
-takeoff_button.pack()
-
-land_button = tk.Button(window, text="Pousar", command=land)
-land_button.pack()
-
-forward_button = tk.Button(window, text="Avançar", command=move_forward)
-forward_button.pack()
-
-backward_button = tk.Button(window, text="Recuar", command=move_backward)
-backward_button.pack()
-
-left_button = tk.Button(window, text="Esquerda", command=move_left)
-left_button.pack()
-
-right_button = tk.Button(window, text="Direita", command=move_right)
-right_button.pack()
-
-# Iniciar captura de vídeo em uma thread separada
-video_thread = Thread(target=capture_video)
-video_thread.daemon = True
-video_thread.start()
 
 # (Conexão e controle do drone)
 
@@ -184,63 +209,9 @@ def get_drone_port():
         print("Entrada inválida. Usando a porta padrão.")
         return default_port
 
-# Função para receber os dados do estado do drone
-def state_handler(event, sender, data):
-    print(f"[Estado do Drone] {data}")
-
-# Função para receber os dados de vídeo do drone
-def video_handler(event, sender, data):
-    # Processar o feed de vídeo aqui
-    pass
-
-# Função para enviar comandos ao drone
-def send_command(command):
-    drone.send_command(command)
-
-# Função para tirar uma foto e salvá-la em arquivo local
-photo_counter = 1  # Contador para nomear as imagens capturadas
-
-def take_photo():
-    global photo_counter  # Acessar a variável global do contador
-
-    photo = drone.take_picture()
-    photo_path = f"photo{photo_counter}.jpg"  # Nome do arquivo único
-    photo.save(photo_path)
-    print(f"Foto tirada e salva em '{photo_path}'")
-
-    photo_counter += 1  # Incrementar o contador para a próxima imagem
-
-recording = False  # Variável para controlar o estado da gravação
-video_counter = 1  # Contador para nomear os vídeos gravados
-
-# Função para iniciar a gravação de vídeo
-def start_recording():
-    global recording, video_counter  # Acessar as variáveis globais
-
-    if not recording:
-        video_path = f"video{video_counter}.mp4"  # Nome do arquivo único
-        drone.start_video_recording(video_path)
-        print(f"Iniciando gravação em '{video_path}'")
-        recording = True
-
-# Função para parar a gravação de vídeo
-def stop_recording():
-    global recording, video_counter  # Acessar as variáveis globais
-
-    if recording:
-        drone.stop_video_recording()
-        print("Gravação encerrada")
-        recording = False
-        video_counter += 1  # Incrementar o contador para o próximo vídeo
-
 # Desconectar o drone
 def disconnect_drone(drone):
     drone.disconnect()
-
-# Desconectar todos os drones
-def disconnect_all_drones(drones):
-    for drone in drones:
-        drone.disconnect()
 
 # Conectar ao drone
 drone_ip = choose_drone_ip()
@@ -248,12 +219,13 @@ drone_port = get_drone_port()
 drone = Tello(drone_ip, drone_port)
 drone.connect()
 
-# Configurar manipuladores de eventos
-drone.subscribe(drone.EVENT_FLIGHT_DATA, state_handler)
-drone.subscribe(drone.EVENT_VIDEO_FRAME, video_handler)
-
 # Iniciar stream de vídeo
 drone.streamon()
+
+# Exibir a janela gráfica em uma thread separada
+window_thread = Thread(target=display_window)
+window_thread.daemon = True
+window_thread.start()
 
 # Menu de controle ou derrubada
 while True:
@@ -337,9 +309,10 @@ while True:
             print("Nenhum drone encontrado.")
 
     elif choice == "0":
-        disconnect_all_drones([drone])
+        disconnect_drone(drone)
         print("Programa encerrado.")
         break
 
     else:
         print("Escolha inválida. Tente novamente.")
+
