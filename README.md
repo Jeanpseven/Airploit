@@ -126,3 +126,14 @@ Execute o script e aguarde até que a interface do drone seja exibida.
 Clique nos botões para controlar o drone: decolar, pousar, mover para frente, mover para trás, mover para a esquerda, mover para a direita.
 O feed de vídeo do drone será exibido na janela.
 O estado atual do drone, como a bateria, altitude e velocidade, será exibido na interface.
+
+
+O script é um programa em Python que permite o controle de um drone Tello usando a biblioteca djitellopy. Ele oferece uma interface gráfica simples para decolar, pousar e controlar o drone em diferentes direções (para frente, para trás, para a esquerda e para a direita). Além disso, o script oferece funcionalidades adicionais, como captura de vídeo em tempo real, captura de fotos e gravação de vídeos.
+
+O código começa verificando se as bibliotecas necessárias, como Pillow, djitellopy, netifaces e xvfbwrapper, estão instaladas no sistema. Se alguma biblioteca estiver faltando, o script tentará instalá-la usando o comando pip install. Em seguida, o código define funções para controlar o drone, como decolar, pousar e mover-se em diferentes direções.
+
+A interface gráfica é criada usando a biblioteca tkinter. Ela exibe um rótulo para o feed de vídeo do drone e botões para as diferentes ações de controle. O feed de vídeo é obtido em uma thread separada e atualizado continuamente na interface.
+
+O script também inclui funcionalidades para conexão e comunicação com o drone. Ele lista os IPs disponíveis na rede local e permite que o usuário selecione o IP do drone a ser controlado. Além disso, o script oferece a opção de derrubar um drone específico ou todos os drones disponíveis na rede.
+
+É importante destacar que o script requer a presença física de um drone Tello e uma conexão Wi-Fi para que funcione corretamente. Certifique-se de ter as permissões necessárias para controlar o drone e tome todas as precauções de segurança ao utilizá-lo.
