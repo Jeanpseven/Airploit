@@ -1,3 +1,6 @@
+pip install Pillow
+pip install netifaces
+
 import tkinter as tk
 from PIL import ImageTk, Image
 from threading import Thread
