@@ -1,6 +1,3 @@
-pip install Pillow
-pip install netifaces
-
 import tkinter as tk
 from PIL import ImageTk, Image
 from threading import Thread
@@ -10,42 +7,36 @@ import importlib
 import netifaces
 import socket
 import os
-
-def ascii():
-    print("""                                      .:-======-:.                                                                    
-                                             .=*##+=-:....:-=+*#*-                                                                
-                                           .*%=.                .=%*.                                                             
-                                          :@+         =+++:        =@:                                                            
-                                          =%         @@@@@@-        #=                                                            
-                                           #-        =@@@@=       :*               .:------:.                                    
-                                            :=:        -@@@@=    :-:           :====-::..::-=+#%#+:                               
-                                               .......  +@@@@%:              --.                .=%@+.                            
-                                                         @@@@@@#:           :          .-=:        =@@.                           
-                                                         #@@@@@@@%+=-------=======++*#@@@@@@        %@=                           
-                                                        :%@- *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+       -@%.                           
-                                -+++++=======-     .-+#@@@+ +@@@@@**%@@@@@@@@@@@#+-:.            -##-                             
-                             =#*-             .-+#@@@@@@@@= @@@@@#: :@@@@@@@@*:    ...    .:--==+-                                
-                           .%#       :====+*%@@@@@@@@@@@@@=.@@@@@@@@@@%+=#@@@*         ....                                       
-                           :@:      +@@@@@@@@@@@@@@@@@@@@@=.@@@@@@@@%=     +@@.                                                   
-                            =#:     :*%@#+:::..   :@@==@@@=.@@@@@@@#@#      =@+                                                   
-                              -=-:           .::. @%   *@@--@@@@@@@@@@:.:::: %%                                                   
-                                 .::::.......    -@-    -==@@@#- .#@@@@.    .=@:                                                  
-                                                 -@:    :+. .      %@@@@+    :@=                                                  
-                                                 -@:  :+:    =     =@+@%=    -@=                                                  
-                                                 -%.-+:       :--.  @*   . .+@*                                                   
-                                                  :+:            .:.#@====#@+.                                                    
-                                                                    =@.-%@=                                                       
-                                                                    :@@#-                                                         
-                                                                     :.                                       """)
-
-import subprocess
-import importlib
-import netifaces
-import socket
 from djitellopy import Tello
 import cv2
-import tkinter as tk
-from PIL import Image, ImageTk
+
+def ascii():
+    print("""                                      .:-======-:.
+                                             .=*##+=-:....:-=+*#*-                 
+                                           .*%=.                .=%*.
+                                          :@+         =+++:        =@:
+                                          =%         @@@@@@-        #=
+                                           #-        =@@@@=       :*               .:------:.
+                                            :=:        -@@@@=    :-:           :====-::..::-=+#%#+:
+                                               .......  +@@@@=              --.                .=%@+.
+                                                         @@@@@@#:           :          .-=:        =@@.
+                                                         #@@@@@@@%+=-------=======++*#@@@@@@        %@=
+                                                        :%@- *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@+       -@%.
+                                -+++++=======-     .-+#@@@+ +@@@@@**%@@@@@@@@@@@#+-:.            -##-
+                             =#*-             .-+#@@@@@@@@= @@@@@#: :@@@@@@@@*:    ...    .:--==+-
+                           .%#       :====+*%@@@@@@@@@@@@@=.@@@@@@@@@@%+=#@@@*         ....
+                           :@:      +@@@@@@@@@@@@@@@@@@@@@=.@@@@@@@@%=     +@@.
+                            =#:     :*%@#+:::..   :@@==@@@=.@@@@@@@#@#      =@+
+                              -=-:           .::. @%   *@@--@@@@@@@@@@:.:::: %%
+                                 .::::.......    -@-    -==@@@#- .#@@@@.    .=@:
+                                                 -@:    :+. .      %@@@@+    :@=
+                                                 -@:  :+:    =     =@+@%=    -@=
+                                                 -%.-+:       :--.  @*   . .+@*
+                                                  :+:            .:.#@====#@+.
+                                                                    =@.-%@=
+                                                                    :@@#-
+                                                                     :.            
+    """)
 
 # Instalar as bibliotecas necessárias
 def install_libraries():
@@ -60,8 +51,19 @@ def install_libraries():
                 subprocess.check_call(["pip", "install", library])
                 print(f"A biblioteca {library} foi instalada com sucesso.")
             except Exception as e:
-                print(f"Ocorreu um erro durante a instalação da biblioteca {library}:")
-                print(str(e))
+                print(f"Ocorreu um erro durante a instalação da biblioteca {library}: {str(e)}")
+
+# Função para obter o IP local da máquina
+def get_local_ip():
+    interfaces = netifaces.interfaces()
+    for interface in interfaces:
+        if interface == 'lo':
+            continue  # Ignorar a interface de loopback
+        addresses = netifaces.ifaddresses(interface)
+        if netifaces.AF_INET in addresses:
+            ip_info = addresses[netifaces.AF_INET][0]
+            return ip_info['addr']
+    return None
 
 # Função para listar IPs disponíveis na rede local
 def list_available_ips():
@@ -111,8 +113,7 @@ def connect_to_drone(drone_ip, drone_port):
         print(f"Conectado ao drone com IP {drone_ip} na porta {drone_port}.")
         return drone
     except Exception as e:
-        print(f"Ocorreu um erro ao conectar ao drone:")
-        print(str(e))
+        print(f"Ocorreu um erro ao conectar ao drone: {str(e)}")
         return None
 
 # Função para desconectar o drone
@@ -123,13 +124,13 @@ def disconnect_drone(drone):
     print("Desconectado do drone.")
 
 # Capturar o feed de vídeo do drone
-def capture_video(drone, label):
-    while True:
-        frame = drone.get_frame_read().frame
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
-        label.config(image=photo)
-        label.image = photo
+def capture_video(drone, label, root):
+    frame = drone.get_frame_read().frame
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
+    label.config(image=photo)
+    label.image = photo
+    root.after(20, capture_video, drone, label, root)  # Atualiza o vídeo a cada 20ms
 
 # Função para exibir a interface gráfica
 def display_interface(drone):
@@ -164,10 +165,7 @@ def display_interface(drone):
     ccw_button = tk.Button(root, text="Girar Esquerda", command=lambda: drone.rotate_counter_clockwise(90))
     ccw_button.pack()
 
-    video_thread = tk.Thread(target=capture_video, args=(drone, label))
-    video_thread.daemon = True
-    video_thread.start()
-
+    root.after(20, capture_video, drone, label, root)  # Iniciar a captura de vídeo
     root.mainloop()
 
 # Função principal
@@ -185,8 +183,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-    else:
-        print("Escolha inválida. Tente novamente.")
-
